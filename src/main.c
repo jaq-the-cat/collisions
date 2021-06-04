@@ -85,7 +85,7 @@ int main() {
     addobj(createobj(WIDTH/2-OW/2, HEIGHT/2-OH*3, GREEN));
     addobj(createobj(WIDTH/2-OW/2, HEIGHT/2-OH/3, BLUE));
 
-    float yv = 0, xv = 0;
+    float yv, xv;
 
     int close = 0;
     while (!close) {
