@@ -89,7 +89,6 @@ int main() {
 
     int close = 0;
     while (!close) {
-        printf("\e[1;1H\e[2J");
         close = handleev();
 
         xv = -SPD * keys.a;
