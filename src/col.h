@@ -7,8 +7,8 @@ typedef struct {
 } vec2;
 
 typedef struct {
-    vec2 origin;
-    vec2 size; 
+    vec2 bl;
+    vec2 tr; 
 } rectangle;
 
 typedef enum node_type {
@@ -16,16 +16,18 @@ typedef enum node_type {
     RECURSIVE,
 } node_type;
 
+typedef struct s_quadrants {
+    struct quadtree *nw, *ne, *sw, *se;
+} s_quadrants;
+
 union qtnode {
     // array of points OR 4 other quadtrees
     struct {
-        vec2 points[QT_CAPACITY];
+        vec2* points[QT_CAPACITY];
         int length;
     } points;
 
-    struct {
-        struct quadtree *nw, *ne, *sw, *se;
-    } quadrants;
+    s_quadrants quadrants;
 };
 
 typedef struct quadtree {
@@ -33,3 +35,6 @@ typedef struct quadtree {
     node_type type;
     union qtnode data;
 } quadtree;
+
+void insert(quadtree *t, vec2 *point);
+vec2* closest_to(quadtree *t, vec2 *point);
