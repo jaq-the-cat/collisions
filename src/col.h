@@ -20,13 +20,14 @@ typedef struct s_quadrants {
     struct quadtree *nw, *ne, *sw, *se;
 } s_quadrants;
 
+typedef struct {
+    vec2* points[QT_CAPACITY];
+    int length;
+} s_points;
+
 union qtnode {
     // array of points OR 4 other quadtrees
-    struct {
-        vec2* points[QT_CAPACITY];
-        int length;
-    } points;
-
+    s_points points;
     s_quadrants quadrants;
 };
 

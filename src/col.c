@@ -28,8 +28,45 @@ int point_inside_rect(vec2 *point, rectangle *rect) {
     );
 }
 
+quadtree* make_quadrant(rectangle boundary) {
+    quadtree *q = malloc(sizeof(quadtree));
+    *q = (quadtree) {
+        .boundary = boundary,
+        .type = POINTS,
+        .data = (union qtnode) {
+            .points = {{0}, 0}
+        }
+    };
+
+    return q;
+}
+
 void subdivide(quadtree *t) {
     vec2* points = (vec2*) t->data.points.points;
+
+    const double mid_x = ((double) t->boundary.bl.x + (double) t->boundary.tr.x)/2.;
+    const double mid_y = ((double) t->boundary.bl.y + (double) t->boundary.tr.y)/2.;
+
+    t->data = (union qtnode) {
+        .quadrants = (s_quadrants) {
+            .nw = make_quadrant((rectangle) {
+                .bl = (vec2) { t->boundary.bl.x, mid_y },
+                .tr = (vec2) { mid_x, t->boundary.tr.y },
+            }),
+            .ne = make_quadrant((rectangle) {
+                .bl = (vec2) { mid_x, mid_y },
+                .tr = (vec2) { t->boundary.tr.x, t->boundary.tr.y },
+            }),
+            .sw = make_quadrant((rectangle) {
+                .bl = (vec2) { t->boundary.bl.x, t->boundary.bl.y },
+                .tr = (vec2) { mid_x, mid_y },
+            }),
+            .se = make_quadrant((rectangle) {
+                .bl = (vec2) { mid_x, t->boundary.bl.y },
+                .tr = (vec2) { t->boundary.tr.x, mid_y },
+            }),
+        },
+    };
     for (int i=0; i<QT_CAPACITY; i++)
         insert(t, &points[i]);
 }
