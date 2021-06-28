@@ -47,6 +47,7 @@ void subdivide(quadtree *t) {
     const double mid_x = ((double) t->boundary.bl.x + (double) t->boundary.tr.x)/2.;
     const double mid_y = ((double) t->boundary.bl.y + (double) t->boundary.tr.y)/2.;
 
+    t->type = RECURSIVE;
     t->data = (union qtnode) {
         .quadrants = (s_quadrants) {
             .nw = make_quadrant((rectangle) {
