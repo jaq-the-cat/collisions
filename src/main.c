@@ -80,11 +80,13 @@ int main() {
         (vec2) {WIDTH, HEIGHT},
     });
 
+    // create and insert 16 random points
     vec2 a_points[16] = {0};
     for (int i=0; i<16; i++) {
         a_points[i] = (vec2) {rand() % WIDTH, rand() % HEIGHT};
         qt_insert(qt, &a_points[i]);
     }
+
     qt_foreach(qt, qt_render);
 
     // add objects
