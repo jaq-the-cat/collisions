@@ -86,7 +86,15 @@ void insert(quadtree *t, vec2 point) {
 
 void remove(quadtree *t, vec2 point) {
     if (t->type == POINTS) {
-        for (s_point *node = t->data.points.head; node->next != NULL; node = node->next)
+        s_point *node = t->data.points.head;
+        if (node->point.x == point.x && node->point.y == point.y) {
+            s_point *next = node->next;
+            free(t->data.points.head);
+            t->data.points.head = malloc(sizeof(s_point));
+            t->data.points.head->point = point;
+            t->data.points.head->next = next;
+        }
+        for (; node->next != NULL; node = node->next)
             if (node->next->point.x == point.x && node->next->point.y == point.y) {
                 // next node to be removed
                 s_point *to_remove = node->next;
