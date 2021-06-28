@@ -21,12 +21,12 @@ typedef struct s_quadrants {
 } s_quadrants;
 
 typedef struct s_point {
-    vec2 point;
+    vec2 *point;
     struct s_point *next;
 } s_point;
 
 typedef struct {
-    s_point* head;
+    s_point *head;
     int length;
 } s_points;
 
@@ -42,6 +42,6 @@ typedef struct quadtree {
     union qtnode data;
 } quadtree;
 
-void insert(quadtree *t, vec2 point);
-void remove(quadtree *t, vec2 point);
-vec2* closest_to(quadtree *t, vec2 point);
+void qt_insert(quadtree *t, vec2 *point);
+void qt_remove(quadtree *t, vec2 *point);
+vec2* qt_closest_to(quadtree *t, vec2 *point);
