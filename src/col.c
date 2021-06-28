@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void recursive_quadrants(quadtree *t, vec2 *point, void (*func)(quadtree*, vec2*)) {
+void qt_recursive_quadrants(quadtree *t, vec2 *point, void (*func)(quadtree*, vec2*)) {
     s_quadrants *q = &t->data.quadrants;
     const double mid_x = ((double) t->boundary.bl.x + (double) t->boundary.tr.x)/2.;
     const double mid_y = ((double) t->boundary.bl.y + (double) t->boundary.tr.y)/2.;
@@ -42,7 +42,7 @@ quadtree* qt_make(rectangle boundary) {
     return q;
 }
 
-void subdivide(quadtree *t) {
+void qt_subdivide(quadtree *t) {
     s_point* node = t->data.points.head;
 
     const double mid_x = ((double) t->boundary.bl.x + (double) t->boundary.tr.x)/2.;
@@ -83,8 +83,8 @@ void qt_insert(quadtree *t, vec2 *point) {
         t->data.points.head->next = oldhead;
         t->data.points.length++;
         if (t->data.points.length == QT_CAPACITY)
-            subdivide(t);
-    } else recursive_quadrants(t, point, qt_insert);
+            qt_subdivide(t);
+    } else qt_recursive_quadrants(t, point, qt_insert);
 }
 
 void qt_remove(quadtree *t, vec2 *point) {
@@ -105,7 +105,17 @@ void qt_remove(quadtree *t, vec2 *point) {
                 break;
             }
 
-    } else recursive_quadrants(t, point, qt_remove);
+    } else qt_recursive_quadrants(t, point, qt_remove);
+}
+
+void qt_foreach(quadtree *t, void (*func)(quadtree*)) {
+    func(t);
+    if (t->type == RECURSIVE) {
+        qt_foreach(t->data.quadrants.nw, func);
+        qt_foreach(t->data.quadrants.ne, func);
+        qt_foreach(t->data.quadrants.sw, func);
+        qt_foreach(t->data.quadrants.se, func);
+    }
 }
 
 vec2* qt_closest_to(quadtree *t, vec2 *point) {

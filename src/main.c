@@ -67,6 +67,12 @@ void render() {
     }
 }
 
+void qt_render(quadtree *t) {
+    printf("BOUNDARY: {%f, %f}, {%f, %f}\n",
+        t->boundary.bl.x, t->boundary.bl.y,
+        t->boundary.tr.x, t->boundary.tr.y);
+}
+
 int main() {
     init();
     quadtree *qt = qt_make((rectangle) {
@@ -79,7 +85,7 @@ int main() {
         a_points[i] = (vec2) {rand() % WIDTH, rand() % HEIGHT};
         qt_insert(qt, &a_points[i]);
     }
-    qt_remove(qt, &a_points[2]);
+    qt_foreach(qt, qt_render);
 
     // add objects
     addobj(createobj(10, 10, RED));
