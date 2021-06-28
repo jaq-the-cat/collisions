@@ -79,7 +79,6 @@ void qt_render_quads(quadtree *t) {
 }
 
 void qt_render_points(vec2 *point) {
-    printf("> Drawing point\n");
     SDL_Rect r = (SDL_Rect) {point->x-5, point->y-5, 10, 10};
     SDL_RenderCopy(rend, red, NULL, &r);
 }
@@ -93,13 +92,14 @@ int main() {
 
     // create and insert 16 random points
     vec2 a_points[8] = {
+        (vec2) {WIDTH/4-10, HEIGHT/4+10}, // top left
+        (vec2) {WIDTH/4-20, HEIGHT/4+20}, // top left
+        (vec2) {WIDTH/4+10, HEIGHT/4-10}, // top left
+        (vec2) {WIDTH/4+20, HEIGHT/4-20}, // top left
         (vec2) {WIDTH/4, HEIGHT/4}, // top left
         (vec2) {WIDTH/2+WIDTH/4, HEIGHT/4}, // top right
         (vec2) {WIDTH/4, HEIGHT/2+HEIGHT/4}, // bottom left
         (vec2) {WIDTH/2+WIDTH/4, HEIGHT/2+HEIGHT/4}, // bottom right
-        (vec2) {WIDTH/2+WIDTH/4-20, HEIGHT/2+HEIGHT/4-40}, // bottom right
-        (vec2) {WIDTH/2+WIDTH/4+20, HEIGHT/2+HEIGHT/4+15}, // bottom right
-        (vec2) {WIDTH/2+WIDTH/4-40, HEIGHT/2+HEIGHT/4+20}, // bottom right
     };
     for (int i=0; i<8; i++)
         qt_insert(qt, &a_points[i]);

@@ -8,15 +8,21 @@ void qt_recursive_quadrants(quadtree *t, vec2 *point, void (*func)(quadtree*, ve
     const double mid_x = ((double) t->boundary.bl.x + (double) t->boundary.tr.x)/2.;
     const double mid_y = ((double) t->boundary.bl.y + (double) t->boundary.tr.y)/2.;
     if (point->x <= mid_x) { // west
-        if (point->y <= mid_y) // north
+        if (point->y <= mid_y) { // north
+            printf("Runnign FUNC for NW\n");
             func(t->data.quadrants.nw, point);
-        else // south
+        } else { // south
+            printf("Runnign FUNC for SW\n");
             func(t->data.quadrants.sw, point);
+        }
     } else { // east
-        if (point->y <= mid_y) // north
+        if (point->y <= mid_y) { // north
+            printf("Runnign FUNC for NE\n");
             func(t->data.quadrants.ne, point);
-        else // south
+        } else { // south
+            printf("Runnign FUNC for SE\n");
             func(t->data.quadrants.se, point);
+        }
     }
 }
 
@@ -141,13 +147,9 @@ void qt_foreach(quadtree *t, void (*quad)(quadtree*), void (*pt)(vec2*)) {
     // for each RECURSIVE quadrant inside `t` and `t` itself, run func();
     quad(t);
     if (t->type == RECURSIVE) {
-        printf("Running for NW:\n");
         qt_foreach(t->data.quadrants.nw, quad, pt);
-        printf("Running for NE:\n");
         qt_foreach(t->data.quadrants.ne, quad, pt);
-        printf("Running for SW:\n");
         qt_foreach(t->data.quadrants.sw, quad, pt);
-        printf("Running for SE:\n");
         qt_foreach(t->data.quadrants.se, quad, pt);
     } else for (s_point *node = t->data.points.head; node != NULL; node = node->next)
         pt(node->point);
