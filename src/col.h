@@ -1,6 +1,6 @@
 #pragma once
 
-#define QT_CAPACITY 8
+#define QT_CAPACITY 3
 
 typedef struct {
     float x, y;
@@ -46,5 +46,5 @@ quadtree* qt_make(rectangle boundary);
 void qt_insert(quadtree *t, vec2 *point);
 void qt_remove(quadtree *t, vec2 *point);
 vec2* qt_closest_to(quadtree *t, vec2 *point);
-void qt_foreach(quadtree *t, void (*func)(quadtree*));
+void qt_foreach(quadtree *t, void (*quad)(quadtree*), void (*pt)(vec2*));
 void qt_free(quadtree *t);

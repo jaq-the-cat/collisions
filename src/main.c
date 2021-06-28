@@ -1,6 +1,5 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include "objects.h"
 #include "col.h"
 
 #define WIDTH 800
@@ -11,6 +10,13 @@
 
 SDL_Window *win;
 SDL_Renderer *rend;
+
+SDL_Texture *red;
+SDL_Texture *green;
+SDL_Texture *blue;
+SDL_Texture *outline;
+
+quadtree *qt;
 
 typedef struct keyboard {
     int w, a, s, d;
@@ -31,8 +37,15 @@ void init() {
     rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     IMG_Init(IMG_INIT_PNG);
 
-    // Textures
-    inittextures(rend);
+    red = IMG_LoadTexture(rend, "assets/red.png");
+    green = IMG_LoadTexture(rend, "assets/green.png");
+    blue = IMG_LoadTexture(rend, "assets/blue.png");
+    outline = IMG_LoadTexture(rend, "assets/outline.png");
+
+    qt = qt_make((rectangle) {
+        (vec2) {0, 0},
+        (vec2) {WIDTH, HEIGHT},
+    });
 }
 
 int handleev() {
@@ -58,41 +71,38 @@ int handleev() {
     return 0;
 }
 
-void render() {
-    SDL_Rect r;
-    for (int i=0; i<objs.length; i++) {
-        object obj = objs.arr[i];
-        r = (SDL_Rect) {obj.x, obj.y, OW, OH};
-        SDL_RenderCopy(rend, obj.color, NULL, &r);
-    }
+void qt_render_quads(quadtree *t) {
+    vec2 bl = t->boundary.bl;
+    vec2 tr = t->boundary.tr;
+    SDL_Rect r = (SDL_Rect) {bl.x, bl.y, tr.x-bl.x, tr.y-bl.y};
+    SDL_RenderCopy(rend, outline, NULL, &r);
 }
 
-void qt_render(quadtree *t) {
-    printf("BOUNDARY: {%f, %f}, {%f, %f}\n",
-        t->boundary.bl.x, t->boundary.bl.y,
-        t->boundary.tr.x, t->boundary.tr.y);
+void qt_render_points(vec2 *point) {
+    printf("> Drawing point\n");
+    SDL_Rect r = (SDL_Rect) {point->x-5, point->y-5, 10, 10};
+    SDL_RenderCopy(rend, red, NULL, &r);
+}
+
+void render() {
+    qt_foreach(qt, qt_render_quads, qt_render_points);
 }
 
 int main() {
     init();
-    quadtree *qt = qt_make((rectangle) {
-        (vec2) {0, 0},
-        (vec2) {WIDTH, HEIGHT},
-    });
 
     // create and insert 16 random points
-    vec2 a_points[16] = {0};
-    for (int i=0; i<16; i++) {
-        a_points[i] = (vec2) {rand() % WIDTH, rand() % HEIGHT};
+    vec2 a_points[8] = {
+        (vec2) {WIDTH/4, HEIGHT/4}, // top left
+        (vec2) {WIDTH/2+WIDTH/4, HEIGHT/4}, // top right
+        (vec2) {WIDTH/4, HEIGHT/2+HEIGHT/4}, // bottom left
+        (vec2) {WIDTH/2+WIDTH/4, HEIGHT/2+HEIGHT/4}, // bottom right
+        (vec2) {WIDTH/2+WIDTH/4-20, HEIGHT/2+HEIGHT/4-40}, // bottom right
+        (vec2) {WIDTH/2+WIDTH/4+20, HEIGHT/2+HEIGHT/4+15}, // bottom right
+        (vec2) {WIDTH/2+WIDTH/4-40, HEIGHT/2+HEIGHT/4+20}, // bottom right
+    };
+    for (int i=0; i<8; i++)
         qt_insert(qt, &a_points[i]);
-    }
-
-    qt_foreach(qt, qt_render);
-
-    // add objects
-    addobj(createobj(10, 10, red));
-    addobj(createobj(WIDTH/2-OW/2, HEIGHT/2-OH*3, green));
-    addobj(createobj(WIDTH/2-OW/2, HEIGHT/2-OH/3, blue));
 
     float yv, xv;
 
@@ -105,9 +115,6 @@ int main() {
 
         yv = -SPD * keys.w;
         yv += SPD * keys.s;
-
-        objs.arr[0].x += xv;
-        objs.arr[0].y += yv;
 
         SDL_SetRenderDrawColor(rend, BG, BG, BG, 255);
         SDL_RenderClear(rend);

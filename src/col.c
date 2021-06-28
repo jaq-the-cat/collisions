@@ -74,9 +74,8 @@ void qt_subdivide(quadtree *t) {
     };
 
     // reinsert points previously inside the quadtree
-    for (; node != NULL; node = node->next) {
+    for (; node != NULL; node = node->next)
         qt_insert(t, node->point);
-    }
 }
 
 void qt_insert(quadtree *t, vec2 *point) {
@@ -138,15 +137,20 @@ void qt_free(quadtree *t) {
     free(t);
 }
 
-void qt_foreach(quadtree *t, void (*func)(quadtree*)) {
+void qt_foreach(quadtree *t, void (*quad)(quadtree*), void (*pt)(vec2*)) {
     // for each RECURSIVE quadrant inside `t` and `t` itself, run func();
-    func(t);
+    quad(t);
     if (t->type == RECURSIVE) {
-        qt_foreach(t->data.quadrants.nw, func);
-        qt_foreach(t->data.quadrants.ne, func);
-        qt_foreach(t->data.quadrants.sw, func);
-        qt_foreach(t->data.quadrants.se, func);
-    }
+        printf("Running for NW:\n");
+        qt_foreach(t->data.quadrants.nw, quad, pt);
+        printf("Running for NE:\n");
+        qt_foreach(t->data.quadrants.ne, quad, pt);
+        printf("Running for SW:\n");
+        qt_foreach(t->data.quadrants.sw, quad, pt);
+        printf("Running for SE:\n");
+        qt_foreach(t->data.quadrants.se, quad, pt);
+    } else for (s_point *node = t->data.points.head; node != NULL; node = node->next)
+        pt(node->point);
 }
 
 vec2* qt_closest_to(quadtree *t, vec2 *point) {
