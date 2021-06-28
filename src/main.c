@@ -79,6 +79,7 @@ int main() {
         a_points[i] = (vec2) {rand() % WIDTH, rand() % HEIGHT};
         qt_insert(qt, &a_points[i]);
     }
+    qt_remove(qt, &a_points[2]);
 
     // add objects
     addobj(createobj(10, 10, RED));

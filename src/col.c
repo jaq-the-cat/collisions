@@ -1,5 +1,6 @@
 #include "col.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 void recursive_quadrants(quadtree *t, vec2 *point, void (*func)(quadtree*, vec2*)) {
     s_quadrants *q = &t->data.quadrants;
