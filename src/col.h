@@ -42,6 +42,7 @@ typedef struct quadtree {
     union qtnode data;
 } quadtree;
 
+quadtree* qt_make(rectangle boundary);
 void qt_insert(quadtree *t, vec2 *point);
 void qt_remove(quadtree *t, vec2 *point);
 vec2* qt_closest_to(quadtree *t, vec2 *point);

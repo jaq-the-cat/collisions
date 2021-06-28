@@ -35,17 +35,6 @@ void init() {
     inittextures(rend);
 }
 
-int ud(SDL_EventType t) {
-    switch (t) {
-        case SDL_KEYDOWN:
-            return 1;
-        case SDL_KEYUP:
-            return 0;
-        default:
-            return 0;
-    }
-}
-
 int handleev() {
     SDL_Event event;
     SDL_PollEvent(&event);
@@ -80,6 +69,10 @@ void render() {
 
 int main() {
     init();
+    quadtree *qt = qt_make((rectangle) {
+        (vec2) {0, 0},
+        (vec2) {WIDTH, HEIGHT},
+    });
 
     // add objects
     addobj(createobj(10, 10, RED));

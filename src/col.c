@@ -28,7 +28,7 @@ int point_inside_rect(vec2 *point, rectangle *rect) {
     );
 }
 
-quadtree* make_quadrant(rectangle boundary) {
+quadtree* qt_make(rectangle boundary) {
     quadtree *q = malloc(sizeof(quadtree));
     *q = (quadtree) {
         .boundary = boundary,
@@ -50,19 +50,19 @@ void subdivide(quadtree *t) {
     t->type = RECURSIVE;
     t->data = (union qtnode) {
         .quadrants = (s_quadrants) {
-            .nw = make_quadrant((rectangle) {
+            .nw = qt_make((rectangle) {
                 .bl = (vec2) { t->boundary.bl.x, mid_y },
                 .tr = (vec2) { mid_x, t->boundary.tr.y },
             }),
-            .ne = make_quadrant((rectangle) {
+            .ne = qt_make((rectangle) {
                 .bl = (vec2) { mid_x, mid_y },
                 .tr = (vec2) { t->boundary.tr.x, t->boundary.tr.y },
             }),
-            .sw = make_quadrant((rectangle) {
+            .sw = qt_make((rectangle) {
                 .bl = (vec2) { t->boundary.bl.x, t->boundary.bl.y },
                 .tr = (vec2) { mid_x, mid_y },
             }),
-            .se = make_quadrant((rectangle) {
+            .se = qt_make((rectangle) {
                 .bl = (vec2) { mid_x, t->boundary.bl.y },
                 .tr = (vec2) { t->boundary.tr.x, mid_y },
             }),
