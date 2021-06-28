@@ -9,18 +9,14 @@ void qt_recursive_quadrants(quadtree *t, vec2 *point, void (*func)(quadtree*, ve
     const double mid_y = ((double) t->boundary.bl.y + (double) t->boundary.tr.y)/2.;
     if (point->x <= mid_x) { // west
         if (point->y <= mid_y) { // north
-            printf("Runnign FUNC for NW\n");
             func(t->data.quadrants.nw, point);
         } else { // south
-            printf("Runnign FUNC for SW\n");
             func(t->data.quadrants.sw, point);
         }
     } else { // east
         if (point->y <= mid_y) { // north
-            printf("Runnign FUNC for NE\n");
             func(t->data.quadrants.ne, point);
         } else { // south
-            printf("Runnign FUNC for SE\n");
             func(t->data.quadrants.se, point);
         }
     }
