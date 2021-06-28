@@ -74,6 +74,12 @@ int main() {
         (vec2) {WIDTH, HEIGHT},
     });
 
+    vec2 a_points[16] = {0};
+    for (int i=0; i<16; i++) {
+        a_points[i] = (vec2) {rand() % WIDTH, rand() % HEIGHT};
+        qt_insert(qt, &a_points[i]);
+    }
+
     // add objects
     addobj(createobj(10, 10, RED));
     addobj(createobj(WIDTH/2-OW/2, HEIGHT/2-OH*3, GREEN));
