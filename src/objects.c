@@ -1,15 +1,14 @@
 #include "objects.h"
 
 objects objs = {{}, 0};
-SDL_Texture* colors[3];
 
 void inittextures(SDL_Renderer *rend) {
-    colors[0] = IMG_LoadTexture(rend, "assets/red.png");
-    colors[1] = IMG_LoadTexture(rend, "assets/green.png");
-    colors[2] = IMG_LoadTexture(rend, "assets/blue.png");
+    red = IMG_LoadTexture(rend, "assets/red.png");
+    green = IMG_LoadTexture(rend, "assets/green.png");
+    blue = IMG_LoadTexture(rend, "assets/blue.png");
 }
 
-object createobj(float x, float y, enum COLORS color) {
+object createobj(float x, float y, SDL_Texture *color) {
     return (object) {x, y, color};
 }
 

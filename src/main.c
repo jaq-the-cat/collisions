@@ -63,7 +63,7 @@ void render() {
     for (int i=0; i<objs.length; i++) {
         object obj = objs.arr[i];
         r = (SDL_Rect) {obj.x, obj.y, OW, OH};
-        SDL_RenderCopy(rend, colors[obj.color], NULL, &r);
+        SDL_RenderCopy(rend, obj.color, NULL, &r);
     }
 }
 
@@ -90,9 +90,9 @@ int main() {
     qt_foreach(qt, qt_render);
 
     // add objects
-    addobj(createobj(10, 10, RED));
-    addobj(createobj(WIDTH/2-OW/2, HEIGHT/2-OH*3, GREEN));
-    addobj(createobj(WIDTH/2-OW/2, HEIGHT/2-OH/3, BLUE));
+    addobj(createobj(10, 10, red));
+    addobj(createobj(WIDTH/2-OW/2, HEIGHT/2-OH*3, green));
+    addobj(createobj(WIDTH/2-OW/2, HEIGHT/2-OH/3, blue));
 
     float yv, xv;
 
