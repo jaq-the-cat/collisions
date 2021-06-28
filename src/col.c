@@ -121,6 +121,23 @@ void qt_remove(quadtree *t, vec2 *point) {
     } else qt_recursive_quadrants(t, point, qt_remove);
 }
 
+void qt_free(quadtree *t) {
+    if (t->type == POINTS) {
+        for (s_point *node = t->data.points.head; node != NULL;) {
+            s_point *next = node->next;
+            free(node);
+            node = next; // free every point
+        }
+    } else {
+        // free every quadrant
+        qt_free(t->data.quadrants.nw);
+        qt_free(t->data.quadrants.ne);
+        qt_free(t->data.quadrants.sw);
+        qt_free(t->data.quadrants.se);
+    }
+    free(t);
+}
+
 void qt_foreach(quadtree *t, void (*func)(quadtree*)) {
     // for each RECURSIVE quadrant inside `t` and `t` itself, run func();
     func(t);

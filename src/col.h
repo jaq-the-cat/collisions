@@ -47,3 +47,4 @@ void qt_insert(quadtree *t, vec2 *point);
 void qt_remove(quadtree *t, vec2 *point);
 vec2* qt_closest_to(quadtree *t, vec2 *point);
 void qt_foreach(quadtree *t, void (*func)(quadtree*));
+void qt_free(quadtree *t);

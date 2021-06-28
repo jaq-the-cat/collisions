@@ -115,6 +115,7 @@ int main() {
         SDL_RenderPresent(rend);
     }
 
+    qt_free(qt);
     SDL_DestroyRenderer(rend);
     SDL_DestroyWindow(win);
     return 0;
