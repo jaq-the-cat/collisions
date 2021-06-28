@@ -42,7 +42,7 @@ quadtree* qt_make(rectangle boundary) {
 }
 
 void subdivide(quadtree *t) {
-    s_point* node;
+    s_point* node = t->data.points.head;
 
     const double mid_x = ((double) t->boundary.bl.x + (double) t->boundary.tr.x)/2.;
     const double mid_y = ((double) t->boundary.bl.y + (double) t->boundary.tr.y)/2.;
@@ -68,8 +68,10 @@ void subdivide(quadtree *t) {
             }),
         },
     };
-    for (node = t->data.points.head; node != NULL; node = node->next)
+
+    for (; node != NULL; node = node->next) {
         qt_insert(t, node->point);
+    }
 }
 
 void qt_insert(quadtree *t, vec2 *point) {
@@ -90,9 +92,7 @@ void qt_remove(quadtree *t, vec2 *point) {
         if (node->point->x == point->x && node->point->y == point->y) {
             s_point *next = node->next;
             free(t->data.points.head);
-            t->data.points.head = malloc(sizeof(s_point));
-            t->data.points.head->point = point;
-            t->data.points.head->next = next;
+            t->data.points.head = next;
         }
         for (; node->next != NULL; node = node->next)
             if (node->next->point->x == point->x && node->next->point->y == point->y) {
