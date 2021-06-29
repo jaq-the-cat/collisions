@@ -3,25 +3,25 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void ll_insert(ll_points *ll, vec2 *point) {
-    ll_node *oldhead = ll->head;
-    ll->head = malloc(sizeof(ll_node));
+void dl_insert(datalist *ll, type point) {
+    dlnode *oldhead = ll->head;
+    ll->head = malloc(sizeof(dlnode));
     ll->head->point = point;
     ll->head->next = oldhead;
     ll->length++;
 }
 
-void ll_remove(ll_points *ll, vec2 *point) {
+void dl_remove(datalist *ll, type point) {
     if (ll->head->point == point) {
         // remove head
-        ll_node *newhead = ll->head->next;
+        dlnode *newhead = ll->head->next;
         free(ll->head);
         ll->head = newhead;
     } else {
-        // remove some other point
-        for (ll_node *node = ll->head; node->next != NULL; node = node->next) {
+        // remove some other data
+        for (dlnode *node = ll->head; node->next != NULL; node = node->next) {
             if (node->next->point == point) {
-                ll_node *next = node->next->next;
+                dlnode *next = node->next->next;
                 free(node->next);
                 node->next = next;
             }
@@ -29,14 +29,14 @@ void ll_remove(ll_points *ll, vec2 *point) {
     }
 }
 
-void ll_foreach(ll_points *ll, void (*func)(vec2*)) {
-    for (ll_node *node = ll->head; node != NULL; node = node->next)
+void dl_foreach(datalist *ll, void (*func)(type)) {
+    for (dlnode *node = ll->head; node != NULL; node = node->next)
         func(node->point);
 }
 
-void ll_free(ll_points *ll) {
-    ll_node *next;
-    for (ll_node *node = ll->head; node != NULL;) {
+void dl_free(datalist *ll) {
+    dlnode *next;
+    for (dlnode *node = ll->head; node != NULL;) {
         next = node->next;
         free(node);
         node = next;

@@ -1,19 +1,21 @@
 #pragma once
 #include "util.h"
 
+typedef vec2* type;
+
 typedef struct ll_node {
-    vec2 *point;
+    type point;
     struct ll_node *next;
-} ll_node;
+} dlnode;
 
 typedef struct ll_points {
-    ll_node *head;
+    dlnode *head;
     int length;
-} ll_points;
+} datalist;
 
 #define LLPOINTS (ll_points) {NULL, 0}
 
-void ll_insert(ll_points *ll, vec2 *point);
-void ll_remove(ll_points *ll, vec2 *point);
-void ll_foreach(ll_points *ll, void (*func)(vec2*));
-void ll_free(ll_points *ll);
+void dl_insert(datalist *ll, type point);
+void dl_remove(datalist *ll, type point);
+void dl_foreach(datalist *ll, void (*func)(type));
+void dl_free(datalist *ll);
