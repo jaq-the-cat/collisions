@@ -5,6 +5,9 @@
 #include "util.h"
 
 quadtree* qt_make(rectangle boundary) {
+    printf("Making new Quadtree with dimensions:\n\
+    {%f, %f},\n\
+    {%f, %f}\n", boundary.origin.x, boundary.origin.y, boundary.size.x, boundary.size.y);
     quadtree *qt = malloc(sizeof(quadtree));
     qt->boundary = boundary;
     qt->type = QTD_POINTS;
@@ -19,6 +22,9 @@ void qt_subdivide(quadtree *qt) {
         qt->type = QTD_RECURSIVE;
         ll_node *node = qt->data.points.head;
 
+        qt->data.points.head = NULL;
+        qt->data.points.length = 0;
+        printf("Northwest:\n");
         qt->data.quadrants[NW] = qt_make(
             RECT(
                 qt->boundary.origin.x,
@@ -26,6 +32,7 @@ void qt_subdivide(quadtree *qt) {
                 qt->boundary.size.x/2,
                 qt->boundary.size.y/2
             ));
+        printf("Northeast:\n");
         qt->data.quadrants[NE] = qt_make(
             RECT(
                 qt->boundary.origin.x + qt->boundary.size.x/2,
@@ -33,6 +40,7 @@ void qt_subdivide(quadtree *qt) {
                 qt->boundary.size.x/2,
                 qt->boundary.size.y/2
             ));
+        printf("Southwest:\n");
         qt->data.quadrants[SW] = qt_make(
             RECT(
                 qt->boundary.origin.x,
@@ -40,6 +48,7 @@ void qt_subdivide(quadtree *qt) {
                 qt->boundary.size.x/2,
                 qt->boundary.size.y/2
             ));
+        printf("Southeast\n");
         qt->data.quadrants[SE] = qt_make(
             RECT(
                 qt->boundary.origin.x + qt->boundary.size.x/2,
@@ -60,10 +69,10 @@ int qt_get_quadrant(rectangle *boundary, vec2 *point) {
     int index = 0;
 
     // if point is lower than the middle
-    if (point->y > boundary->origin.y - boundary->size.y/2)
+    if (point->y > boundary->origin.y - boundary->size.y/2.)
         index += 2; //  south side
-    // if point is higher than the middle
-    if (point->x > boundary->origin.x + boundary->size.x/2)
+    // if point is to the right of the middle
+    if (point->x > boundary->origin.x + boundary->size.x/2.)
         index += 1; // east side
 
     return index;

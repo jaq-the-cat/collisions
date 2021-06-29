@@ -17,10 +17,14 @@ SDL_Texture *outline;
 quadtree *qt;
 
 vec2 a_points[] = {
+    VEC2(WIDTH/4-70,      HEIGHT/4-70), // top left
     VEC2(WIDTH/4-50,      HEIGHT/4-50), // top left
+    VEC2(WIDTH/4-30,      HEIGHT/4-30), // top left
+
     VEC2(WIDTH/4+50,      HEIGHT/4-50), // top left
     VEC2(WIDTH/4-50,      HEIGHT/4+50), // top left
     VEC2(WIDTH/4+50,      HEIGHT/4+50), // top left
+
     VEC2(WIDTH/2+WIDTH/4, HEIGHT/4), // top right
     VEC2(WIDTH/4,         HEIGHT/2+HEIGHT/4), // bottom left
     VEC2(WIDTH/2+WIDTH/4, HEIGHT/2+HEIGHT/4), // bottom right

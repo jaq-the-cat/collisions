@@ -2,7 +2,7 @@
 #include "util.h"
 #include "llpoints.h"
 
-#define QT_CAPACITY 3
+#define QT_CAPACITY 4
 
 typedef enum qt_data_type {
     QTD_POINTS,
