@@ -2,7 +2,7 @@
 #include "util.h"
 #include "llpoints.h"
 
-#define QT_CAPACITY 12
+#define QT_CAPACITY 16
 
 typedef enum qt_quadrants {
     NW=0, NE=1,
