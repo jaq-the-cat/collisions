@@ -16,19 +16,8 @@ SDL_Texture *outline;
 
 quadtree *qt;
 
-vec2 a_points[] = {
-    VEC2(WIDTH/4-70,      HEIGHT/4-70), // top left
-    VEC2(WIDTH/4-50,      HEIGHT/4-50), // top left
-    VEC2(WIDTH/4-30,      HEIGHT/4-30), // top left
-
-    VEC2(WIDTH/4+50,      HEIGHT/4-50), // top left
-    VEC2(WIDTH/4-50,      HEIGHT/4+50), // top left
-    VEC2(WIDTH/4+50,      HEIGHT/4+50), // top left
-
-    VEC2(WIDTH/2+WIDTH/4, HEIGHT/4), // top right
-    VEC2(WIDTH/4,         HEIGHT/2+HEIGHT/4), // bottom left
-    VEC2(WIDTH/2+WIDTH/4, HEIGHT/2+HEIGHT/4), // bottom right
-};
+#define PC 100
+vec2 a_points[PC] = {0};
 
 // initialization
 void init() {
@@ -52,8 +41,10 @@ void init() {
     qt = qt_make((rectangle) {0, 0, WIDTH, HEIGHT});
 
     // create and insert 16 random points
-    for (int i=0; i<7; i++)
+    for (int i=0; i<PC; i++) {
+        a_points[i] = VEC2(rand() % WIDTH, rand() % HEIGHT);
         qt_insert(qt, &a_points[i]);
+    }
 }
 
 // rendering

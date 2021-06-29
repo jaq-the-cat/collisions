@@ -28,15 +28,15 @@ void qt_subdivide(quadtree *qt) {
         qt->data.quadrants[NW] = qt_make(
             RECT(
                 qt->boundary.origin.x,
-                qt->boundary.origin.y + qt->boundary.size.y/2,
+                qt->boundary.origin.y,
                 qt->boundary.size.x/2,
                 qt->boundary.size.y/2
             ));
         printf("Northeast:\n");
         qt->data.quadrants[NE] = qt_make(
             RECT(
-                qt->boundary.origin.x + qt->boundary.size.x/2,
-                qt->boundary.origin.y + qt->boundary.size.y/2,
+                qt->boundary.origin.x + (qt->boundary.size.x/2),
+                qt->boundary.origin.y,
                 qt->boundary.size.x/2,
                 qt->boundary.size.y/2
             ));
@@ -44,15 +44,15 @@ void qt_subdivide(quadtree *qt) {
         qt->data.quadrants[SW] = qt_make(
             RECT(
                 qt->boundary.origin.x,
-                qt->boundary.origin.y,
+                qt->boundary.origin.y + (qt->boundary.size.y/2),
                 qt->boundary.size.x/2,
                 qt->boundary.size.y/2
             ));
         printf("Southeast\n");
         qt->data.quadrants[SE] = qt_make(
             RECT(
-                qt->boundary.origin.x + qt->boundary.size.x/2,
-                qt->boundary.origin.y,
+                qt->boundary.origin.x + (qt->boundary.size.x/2),
+                qt->boundary.origin.y + (qt->boundary.size.y/2),
                 qt->boundary.size.x/2,
                 qt->boundary.size.y/2
             ));
@@ -69,10 +69,10 @@ int qt_get_quadrant(rectangle *boundary, vec2 *point) {
     int index = 0;
 
     // if point is lower than the middle
-    if (point->y > boundary->origin.y - boundary->size.y/2.)
+    if (point->y >= boundary->origin.y + boundary->size.y/2.)
         index += 2; //  south side
     // if point is to the right of the middle
-    if (point->x > boundary->origin.x + boundary->size.x/2.)
+    if (point->x >= boundary->origin.x + boundary->size.x/2.)
         index += 1; // east side
 
     return index;

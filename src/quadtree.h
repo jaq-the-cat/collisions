@@ -2,17 +2,17 @@
 #include "util.h"
 #include "llpoints.h"
 
-#define QT_CAPACITY 4
+#define QT_CAPACITY 12
+
+typedef enum qt_quadrants {
+    NW=0, NE=1,
+    SW=2, SE=3,
+} qt_quadrants;
 
 typedef enum qt_data_type {
     QTD_POINTS,
     QTD_RECURSIVE,
 } qt_data_type;
-
-typedef enum qt_quadrants {
-    NW, NE,
-    SW, SE,
-} qt_quadrants;
 
 typedef union qt_data {
     // array of points OR 4 other quadtrees
