@@ -27,6 +27,11 @@ void ll_remove(ll_points *ll, vec2 *point) {
     }
 }
 
+void ll_foreach(ll_points *ll, void (*func)(vec2*)) {
+    for (ll_node *node = ll->head; node != NULL; node = node->next)
+        func(node->point);
+}
+
 void ll_free(ll_points *ll, vec2 *point) {
     ll_node *next;
     for (ll_node *node = ll->head; node != NULL;) {
