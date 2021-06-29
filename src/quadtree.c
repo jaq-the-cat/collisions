@@ -11,7 +11,7 @@ quadtree* qt_make(rectangle boundary) {
     qt->data = (qt_data) {
         .points = LLPOINTS,
     };
-    return NULL;
+    return qt;
 }
 
 void qt_subdivide(quadtree *qt) {
@@ -92,7 +92,16 @@ vec2* qt_closest_to(quadtree *qt, vec2 *point) {
 }
 
 void qt_foreach(quadtree *qt, void (*quad)(quadtree*), void (*pt)(vec2*)) {
+    quad(qt);
 
+    if (qt->type == QTD_POINTS) {
+        ll_foreach(&qt->data.points, pt);
+    } else {
+        qt_foreach(qt->data.quadrants[NW], quad, pt);
+        qt_foreach(qt->data.quadrants[NE], quad, pt);
+        qt_foreach(qt->data.quadrants[SW], quad, pt);
+        qt_foreach(qt->data.quadrants[SE], quad, pt);
+    }
 }
 
 void qt_free(quadtree *qt) {

@@ -1,12 +1,14 @@
 #include "llpoints.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 
 void ll_insert(ll_points *ll, vec2 *point) {
     ll_node *oldhead = ll->head;
     ll->head = malloc(sizeof(ll_node));
     ll->head->point = point;
     ll->head->next = oldhead;
+    ll->length++;
 }
 
 void ll_remove(ll_points *ll, vec2 *point) {

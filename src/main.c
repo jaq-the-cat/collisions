@@ -3,10 +3,8 @@
 #include "quadtree.h"
 
 #define WIDTH 800
-#define HEIGHT 600
-#define BG 15
-
-#define SPD 10
+#define HEIGHT 800
+#define BG 200
 
 SDL_Window *win;
 SDL_Renderer *rend;
@@ -18,11 +16,18 @@ SDL_Texture *outline;
 
 quadtree *qt;
 
+vec2 a_points[] = {
+    VEC2(WIDTH/4,         HEIGHT/4), // top left
+    VEC2(WIDTH/2+WIDTH/4, HEIGHT/4), // top right
+    VEC2(WIDTH/4,         HEIGHT/2+HEIGHT/4), // bottom left
+    VEC2(WIDTH/2+WIDTH/4, HEIGHT/2+HEIGHT/4), // bottom right
+};
+
 // initialization
 void init() {
     // Window and renderer
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
-        printf("Error initializing SDL: %s\n", SDL_GetError());
+        fprintf(stderr, "Error initializing SDL: %s\n", SDL_GetError());
     win = SDL_CreateWindow(
         "Quadtree Collisions",
         SDL_WINDOWPOS_CENTERED,
@@ -40,17 +45,34 @@ void init() {
     qt = qt_make((rectangle) {0, 0, WIDTH, HEIGHT});
 
     // create and insert 16 random points
-    vec2 a_points[] = {
-        VEC2(WIDTH/4,         HEIGHT/4), // top left
-        VEC2(WIDTH/2+WIDTH/4, HEIGHT/4), // top right
-        VEC2(WIDTH/4,         HEIGHT/2+HEIGHT/4), // bottom left
-        VEC2(WIDTH/2+WIDTH/4, HEIGHT/2+HEIGHT/4), // bottom right
-    };
-    for (int i=0; i<4; qt_insert(qt, &a_points[i++]));
+    for (int i=0; i<4; i++)
+        qt_insert(qt, &a_points[i]);
 }
 
 // rendering
+
+void render_quadtree(quadtree *qt) {
+    SDL_Rect r = (SDL_Rect) {
+        qt->boundary.origin.x,
+        qt->boundary.origin.y,
+        qt->boundary.size.x,
+        qt->boundary.size.y,
+    };
+
+    SDL_RenderCopy(rend, outline, NULL, &r);
+}
+
+void render_points(vec2 *point) {
+    SDL_Rect r = (SDL_Rect) {
+        point->x-5, point->y-5,
+        10, 10
+    };
+
+    SDL_RenderCopy(rend, red, NULL, &r);
+}
+
 void render() {
+    qt_foreach(qt, render_quadtree, render_points);
 }
 
 // processing
