@@ -14,12 +14,12 @@ typedef struct {
     vec2 origin, size;
 } rectangle;
 
-typedef enum node_type {
+typedef enum qt_node_type {
     POINTS,
     RECURSIVE,
 } qt_node_type;
 
-typedef struct s_quadrants {
+typedef struct qt_quadrants {
     struct quadtree *nw, *ne, *sw, *se;
 } qt_quadrants;
 
@@ -28,21 +28,21 @@ typedef struct qt_point {
     struct qt_point *next;
 } qt_point;
 
-typedef struct {
+typedef struct qt_points {
     qt_point *head;
     int length;
 } qt_points;
 
-union qt_data {
+typedef union qt_data {
     // array of points OR 4 other quadtrees
     qt_points points;
     qt_quadrants quadrants;
-};
+} qt_data;
 
 typedef struct quadtree {
     rectangle boundary;
     qt_node_type type;
-    union qt_data data;
+    qt_data data;
 } quadtree;
 
 quadtree* qt_make(rectangle boundary);
