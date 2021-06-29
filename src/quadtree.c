@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "util.h"
+
 quadtree* qt_make(rectangle boundary) {
     quadtree *qt = malloc(sizeof(quadtree));
     qt->boundary = boundary;
@@ -13,6 +15,42 @@ quadtree* qt_make(rectangle boundary) {
 }
 
 void qt_subdivide(quadtree *qt) {
+    if (qt->type == QTD_POINTS) {
+        qt->type = QTD_RECURSIVE;
+        ll_points points = qt->data.points;
+        qt->data.quadrants[NW] = qt_make(
+            RECT(
+                qt->boundary.origin.x,
+                qt->boundary.origin.y + qt->boundary.size.y/2,
+                qt->boundary.size.x/2,
+                qt->boundary.size.y/2
+            ));
+        qt->data.quadrants[NE] = qt_make(
+            RECT(
+                qt->boundary.origin.x + qt->boundary.size.x/2,
+                qt->boundary.origin.y + qt->boundary.size.y/2,
+                qt->boundary.size.x/2,
+                qt->boundary.size.y/2
+            ));
+        qt->data.quadrants[SW] = qt_make(
+            RECT(
+                qt->boundary.origin.x,
+                qt->boundary.origin.y,
+                qt->boundary.size.x/2,
+                qt->boundary.size.y/2
+            ));
+        qt->data.quadrants[SE] = qt_make(
+            RECT(
+                qt->boundary.origin.x + qt->boundary.size.x/2,
+                qt->boundary.origin.y,
+                qt->boundary.size.x/2,
+                qt->boundary.size.y/2
+            ));
+
+        // reinsert points
+        for (ll_node *node = points.head; node != NULL; node = node->next)
+            qt_insert(qt, node->point);
+    }
 }
 
 int qt_get_quadrant(rectangle *boundary, vec2 *point) {
@@ -31,10 +69,13 @@ int qt_get_quadrant(rectangle *boundary, vec2 *point) {
 }
 
 void qt_insert(quadtree *qt, vec2 *point) {
-    if (qt->type == QTD_POINTS)
+    if (qt->type == QTD_POINTS) {
         ll_insert(&qt->data.points, point);
-    else
+        if (qt->data.points.length >= QT_CAPACITY)
+            qt_subdivide(qt);
+    } else {
         qt_insert(qt->data.quadrants[qt_get_quadrant(&qt->boundary, point)], point);
+    }
 }
 
 void qt_remove(quadtree *qt, vec2 *point) {
