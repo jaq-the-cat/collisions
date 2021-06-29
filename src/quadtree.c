@@ -12,7 +12,7 @@ quadtree* qt_make(rectangle boundary) {
     qt->boundary = boundary;
     qt->type = QTD_POINTS;
     qt->data = (qt_data) {
-        .points = LLPOINTS,
+        .list = DATALIST,
     };
     return qt;
 }
@@ -20,10 +20,10 @@ quadtree* qt_make(rectangle boundary) {
 void qt_subdivide(quadtree *qt) {
     if (qt->type == QTD_POINTS) {
         qt->type = QTD_RECURSIVE;
-        ll_node *node = qt->data.points.head;
+        dlnode *node = qt->data.list.head;
 
-        qt->data.points.head = NULL;
-        qt->data.points.length = 0;
+        qt->data.list.head = NULL;
+        qt->data.list.length = 0;
         printf("Northwest:\n");
         qt->data.quadrants[NW] = qt_make(
             RECT(
@@ -80,8 +80,8 @@ int qt_get_quadrant(rectangle *boundary, vec2 *point) {
 
 void qt_insert(quadtree *qt, vec2 *point) {
     if (qt->type == QTD_POINTS) {
-        ll_insert(&qt->data.points, point);
-        if (qt->data.points.length >= QT_CAPACITY)
+        dl_insert(&qt->data.list, point);
+        if (qt->data.list.length >= QT_CAPACITY)
             qt_subdivide(qt);
     } else {
         qt_insert(qt->data.quadrants[qt_get_quadrant(&qt->boundary, point)], point);
@@ -90,7 +90,7 @@ void qt_insert(quadtree *qt, vec2 *point) {
 
 void qt_remove(quadtree *qt, vec2 *point) {
     if (qt->type == QTD_POINTS)
-        ll_remove(&qt->data.points, point);
+        dl_remove(&qt->data.list, point);
     else
         qt_remove(qt->data.quadrants[qt_get_quadrant(&qt->boundary, point)], point);
 
@@ -104,7 +104,7 @@ void qt_foreach(quadtree *qt, void (*quad)(quadtree*), void (*pt)(vec2*)) {
     quad(qt);
 
     if (qt->type == QTD_POINTS) {
-        ll_foreach(&qt->data.points, pt);
+        dl_foreach(&qt->data.list, pt);
     } else {
         qt_foreach(qt->data.quadrants[NW], quad, pt);
         qt_foreach(qt->data.quadrants[NE], quad, pt);
@@ -115,7 +115,7 @@ void qt_foreach(quadtree *qt, void (*quad)(quadtree*), void (*pt)(vec2*)) {
 
 void qt_free(quadtree *qt) {
     if (qt->type == QTD_POINTS) {
-        ll_free(&qt->data.points);
+        dl_free(&qt->data.list);
     } else {
         qt_free(qt->data.quadrants[NW]);
         qt_free(qt->data.quadrants[NE]);

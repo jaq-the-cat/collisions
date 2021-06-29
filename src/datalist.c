@@ -1,9 +1,9 @@
-#include "llpoints.h"
+#include "datalist.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 
-void dl_insert(datalist *ll, type point) {
+void dl_insert(datalist *ll, qt_type point) {
     dlnode *oldhead = ll->head;
     ll->head = malloc(sizeof(dlnode));
     ll->head->point = point;
@@ -11,7 +11,7 @@ void dl_insert(datalist *ll, type point) {
     ll->length++;
 }
 
-void dl_remove(datalist *ll, type point) {
+void dl_remove(datalist *ll, qt_type point) {
     if (ll->head->point == point) {
         // remove head
         dlnode *newhead = ll->head->next;
@@ -29,7 +29,7 @@ void dl_remove(datalist *ll, type point) {
     }
 }
 
-void dl_foreach(datalist *ll, void (*func)(type)) {
+void dl_foreach(datalist *ll, void (*func)(qt_type)) {
     for (dlnode *node = ll->head; node != NULL; node = node->next)
         func(node->point);
 }

@@ -11,3 +11,6 @@ typedef struct {
 typedef struct {
     vec2 origin, size;
 } rectangle;
+
+// type to be stored in quadtree
+typedef vec2* qt_type;
