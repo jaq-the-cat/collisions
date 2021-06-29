@@ -15,26 +15,33 @@ quadtree* qt_make(rectangle boundary) {
 void qt_subdivide(quadtree *qt) {
 }
 
+int qt_get_quadrant(rectangle *boundary, vec2 *point) {
+    // NW=0 NE=1
+    // SW=2 SE=3
+    int index = 0;
+
+    // if point is lower than the middle
+    if (point->y > boundary->origin.y - boundary->size.y/2)
+        index += 2; //  south side
+    // if point is higher than the middle
+    if (point->x > boundary->origin.x + boundary->size.x/2)
+        index += 1; // east side
+
+    return index;
+}
+
 void qt_insert(quadtree *qt, vec2 *point) {
-    if (qt->type == QTD_POINTS) {
-        // make `point` the new head of the linked list
-    } else {
-        // NW=0 NE=1
-        // SW=2 SE=3
-
-        int index = 0;
-        // if point is lower than the middle
-        if (point->y > qt->boundary.origin.y - qt->boundary.size.y/2)
-            index += 2; //  south side
-        // if point is higher than the middle
-        if (point->x > qt->boundary.origin.x + qt->boundary.size.x/2)
-            index += 1; // east side
-
-        qt_insert(qt->data.quadrants[index], point);
-    }
+    if (qt->type == QTD_POINTS)
+        ll_insert(&qt->data.points, point);
+    else
+        qt_insert(qt->data.quadrants[qt_get_quadrant(&qt->boundary, point)], point);
 }
 
 void qt_remove(quadtree *qt, vec2 *point) {
+    if (qt->type == QTD_POINTS)
+        ll_remove(&qt->data.points, point);
+    else
+        qt_remove(qt->data.quadrants[qt_get_quadrant(&qt->boundary, point)], point);
 
 }
 

@@ -1,6 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include "col.h"
+#include "quadtree.h"
 
 #define WIDTH 800
 #define HEIGHT 600
