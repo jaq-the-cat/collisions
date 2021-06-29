@@ -14,14 +14,10 @@ typedef struct {
     vec2 origin, size;
 } rectangle;
 
-typedef enum qt_node_type {
-    POINTS,
-    RECURSIVE,
-} qt_node_type;
-
-typedef struct qt_quadrants {
-    struct quadtree *nw, *ne, *sw, *se;
-} qt_quadrants;
+typedef enum qt_data_type {
+    QTD_POINTS,
+    QTD_RECURSIVE,
+} qt_data_type;
 
 typedef struct qt_point {
     vec2 *point;
@@ -33,15 +29,20 @@ typedef struct qt_points {
     int length;
 } qt_points;
 
+typedef enum qt_quadrants {
+    NW, NE,
+    SW, SE,
+} qt_quadrants;
+
 typedef union qt_data {
     // array of points OR 4 other quadtrees
     qt_points points;
-    qt_quadrants quadrants;
+    struct quadtree* quadrants[4];
 } qt_data;
 
 typedef struct quadtree {
     rectangle boundary;
-    qt_node_type type;
+    qt_data_type type;
     qt_data data;
 } quadtree;
 
