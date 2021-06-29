@@ -7,7 +7,7 @@ quadtree* qt_make(rectangle boundary) {
     qt->boundary = boundary;
     qt->type = QTD_POINTS;
     qt->data = (qt_data) {
-        .points = (qt_points) {NULL, 0}
+        .points = LLPOINTS,
     };
     return NULL;
 }
@@ -18,10 +18,6 @@ void qt_subdivide(quadtree *qt) {
 void qt_insert(quadtree *qt, vec2 *point) {
     if (qt->type == QTD_POINTS) {
         // make `point` the new head of the linked list
-        qt_point *oldhead = qt->data.points.head;
-        qt->data.points.head = malloc(sizeof(qt_point));
-        qt->data.points.head->point = point;
-        qt->data.points.head->next = oldhead;
     } else {
         // NW=0 NE=1
         // SW=2 SE=3

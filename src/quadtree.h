@@ -1,33 +1,13 @@
 #pragma once
+#include "util.h"
+#include "llpoints.h"
 
 #define QT_CAPACITY 3
-
-#define VEC2(x, y) (vec2) {x, y}
-#define RECT(x, y, w, h) (rectangle) \
-    {VEC2(x, y), VEC2(w, h)}
-
-typedef struct {
-    float x, y;
-} vec2;
-
-typedef struct {
-    vec2 origin, size;
-} rectangle;
 
 typedef enum qt_data_type {
     QTD_POINTS,
     QTD_RECURSIVE,
 } qt_data_type;
-
-typedef struct qt_point {
-    vec2 *point;
-    struct qt_point *next;
-} qt_point;
-
-typedef struct qt_points {
-    qt_point *head;
-    int length;
-} qt_points;
 
 typedef enum qt_quadrants {
     NW, NE,
@@ -36,7 +16,7 @@ typedef enum qt_quadrants {
 
 typedef union qt_data {
     // array of points OR 4 other quadtrees
-    qt_points points;
+    ll_points points;
     struct quadtree* quadrants[4];
 } qt_data;
 
