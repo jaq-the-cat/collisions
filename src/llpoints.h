@@ -16,4 +16,4 @@ typedef struct ll_points {
 void ll_insert(ll_points *ll, vec2 *point);
 void ll_remove(ll_points *ll, vec2 *point);
 void ll_foreach(ll_points *ll, void (*func)(vec2*));
-void ll_free(ll_points *ll, vec2 *point);
+void ll_free(ll_points *ll);

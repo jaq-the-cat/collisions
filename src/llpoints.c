@@ -32,7 +32,7 @@ void ll_foreach(ll_points *ll, void (*func)(vec2*)) {
         func(node->point);
 }
 
-void ll_free(ll_points *ll, vec2 *point) {
+void ll_free(ll_points *ll) {
     ll_node *next;
     for (ll_node *node = ll->head; node != NULL;) {
         next = node->next;

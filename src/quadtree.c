@@ -17,7 +17,8 @@ quadtree* qt_make(rectangle boundary) {
 void qt_subdivide(quadtree *qt) {
     if (qt->type == QTD_POINTS) {
         qt->type = QTD_RECURSIVE;
-        ll_points points = qt->data.points;
+        ll_node *node = qt->data.points.head;
+
         qt->data.quadrants[NW] = qt_make(
             RECT(
                 qt->boundary.origin.x,
@@ -48,7 +49,7 @@ void qt_subdivide(quadtree *qt) {
             ));
 
         // reinsert points
-        for (ll_node *node = points.head; node != NULL; node = node->next)
+        for (; node != NULL; node = node->next)
             qt_insert(qt, node->point);
     }
 }
@@ -95,5 +96,12 @@ void qt_foreach(quadtree *qt, void (*quad)(quadtree*), void (*pt)(vec2*)) {
 }
 
 void qt_free(quadtree *qt) {
-
+    if (qt->type == QTD_POINTS) {
+        ll_free(&qt->data.points);
+    } else {
+        qt_free(qt->data.quadrants[NW]);
+        qt_free(qt->data.quadrants[NE]);
+        qt_free(qt->data.quadrants[SW]);
+        qt_free(qt->data.quadrants[SE]);
+    }
 }
