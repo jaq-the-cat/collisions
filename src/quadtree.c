@@ -5,9 +5,6 @@
 #include "util.h"
 
 quadtree* qt_make(rectangle boundary) {
-    printf("Making new Quadtree with dimensions:\n\
-    {%f, %f},\n\
-    {%f, %f}\n", boundary.origin.x, boundary.origin.y, boundary.size.x, boundary.size.y);
     quadtree *qt = malloc(sizeof(quadtree));
     qt->boundary = boundary;
     qt->type = QTD_POINTS;
@@ -24,7 +21,6 @@ void qt_subdivide(quadtree *qt) {
 
         qt->data.list.head = NULL;
         qt->data.list.length = 0;
-        printf("Northwest:\n");
         qt->data.quadrants[NW] = qt_make(
             RECT(
                 qt->boundary.origin.x,
@@ -32,7 +28,6 @@ void qt_subdivide(quadtree *qt) {
                 qt->boundary.size.x/2,
                 qt->boundary.size.y/2
             ));
-        printf("Northeast:\n");
         qt->data.quadrants[NE] = qt_make(
             RECT(
                 qt->boundary.origin.x + (qt->boundary.size.x/2),
@@ -40,7 +35,6 @@ void qt_subdivide(quadtree *qt) {
                 qt->boundary.size.x/2,
                 qt->boundary.size.y/2
             ));
-        printf("Southwest:\n");
         qt->data.quadrants[SW] = qt_make(
             RECT(
                 qt->boundary.origin.x,
@@ -48,7 +42,6 @@ void qt_subdivide(quadtree *qt) {
                 qt->boundary.size.x/2,
                 qt->boundary.size.y/2
             ));
-        printf("Southeast\n");
         qt->data.quadrants[SE] = qt_make(
             RECT(
                 qt->boundary.origin.x + (qt->boundary.size.x/2),
