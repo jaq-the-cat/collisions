@@ -18,18 +18,13 @@ SDL_Texture *outline;
 
 quadtree *qt;
 
-typedef struct keyboard {
-    int w, a, s, d;
-} keyboard;
-
-keyboard keys = {0, 0, 0, 0};
-
+// initialization
 void init() {
     // Window and renderer
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
         printf("Error initializing SDL: %s\n", SDL_GetError());
     win = SDL_CreateWindow(
-        "SDL Game",
+        "Quadtree Collisions",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         WIDTH, HEIGHT,
@@ -42,80 +37,39 @@ void init() {
     blue = IMG_LoadTexture(rend, "assets/blue.png");
     outline = IMG_LoadTexture(rend, "assets/outline.png");
 
-    qt = qt_make((rectangle) {
-        (vec2) {0, 0},
-        (vec2) {WIDTH, HEIGHT},
-    });
+    qt = qt_make((rectangle) {0, 0, WIDTH, HEIGHT});
+
+    // create and insert 16 random points
+    vec2 a_points[] = {
+        VEC2(WIDTH/4,         HEIGHT/4), // top left
+        VEC2(WIDTH/2+WIDTH/4, HEIGHT/4), // top right
+        VEC2(WIDTH/4,         HEIGHT/2+HEIGHT/4), // bottom left
+        VEC2(WIDTH/2+WIDTH/4, HEIGHT/2+HEIGHT/4), // bottom right
+    };
+    for (int i=0; i<4; qt_insert(qt, &a_points[i++]));
 }
 
+// rendering
+void render() {
+}
+
+// processing
 int handleev() {
     SDL_Event event;
     SDL_PollEvent(&event);
-    switch (event.key.keysym.scancode) {
-        case SDL_SCANCODE_Q:
-            return 1;
-        case SDL_SCANCODE_W:
-            keys.w = event.key.type == SDL_KEYDOWN;
-            break;
-        case SDL_SCANCODE_A:
-            keys.a = event.key.type == SDL_KEYDOWN;
-            break;
-        case SDL_SCANCODE_S:
-            keys.s = event.key.type == SDL_KEYDOWN;
-            break;
-        case SDL_SCANCODE_D:
-            keys.d = event.key.type == SDL_KEYDOWN;
-            break;
-        default: break;
-    }
-    return 0;
+    return event.key.keysym.scancode == SDL_SCANCODE_Q;
 }
 
-void qt_render_quads(quadtree *t) {
-    vec2 bl = t->boundary.bl;
-    vec2 tr = t->boundary.tr;
-    SDL_Rect r = (SDL_Rect) {bl.x, bl.y, tr.x-bl.x, tr.y-bl.y};
-    SDL_RenderCopy(rend, outline, NULL, &r);
-}
-
-void qt_render_points(vec2 *point) {
-    SDL_Rect r = (SDL_Rect) {point->x-5, point->y-5, 10, 10};
-    SDL_RenderCopy(rend, red, NULL, &r);
-}
-
-void render() {
-    qt_foreach(qt, qt_render_quads, qt_render_points);
+void update() {
 }
 
 int main() {
     init();
 
-    // create and insert 16 random points
-    vec2 a_points[8] = {
-        (vec2) {WIDTH/4-10, HEIGHT/4+10}, // top left
-        (vec2) {WIDTH/4-20, HEIGHT/4+20}, // top left
-        (vec2) {WIDTH/4+10, HEIGHT/4-10}, // top left
-        (vec2) {WIDTH/4+20, HEIGHT/4-20}, // top left
-        (vec2) {WIDTH/4, HEIGHT/4}, // top left
-        (vec2) {WIDTH/2+WIDTH/4, HEIGHT/4}, // top right
-        (vec2) {WIDTH/4, HEIGHT/2+HEIGHT/4}, // bottom left
-        (vec2) {WIDTH/2+WIDTH/4, HEIGHT/2+HEIGHT/4}, // bottom right
-    };
-    for (int i=0; i<8; i++)
-        qt_insert(qt, &a_points[i]);
-
-    float yv, xv;
-
     int close = 0;
     while (!close) {
         close = handleev();
-
-        xv = -SPD * keys.a;
-        xv += SPD * keys.d;
-
-        yv = -SPD * keys.w;
-        yv += SPD * keys.s;
-
+        update();
         SDL_SetRenderDrawColor(rend, BG, BG, BG, 255);
         SDL_RenderClear(rend);
         render();

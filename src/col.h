@@ -2,49 +2,55 @@
 
 #define QT_CAPACITY 3
 
+#define VEC2(x, y) (vec2) {x, y}
+#define RECT(x, y, w, h) (rectangle) \
+    {VEC2(x, y), VEC2(w, h)}
+
 typedef struct {
     float x, y;
 } vec2;
 
 typedef struct {
-    vec2 bl;
-    vec2 tr; 
+    vec2 origin, size;
 } rectangle;
 
 typedef enum node_type {
     POINTS,
     RECURSIVE,
-} node_type;
+} qt_node_type;
 
 typedef struct s_quadrants {
     struct quadtree *nw, *ne, *sw, *se;
-} s_quadrants;
+} qt_quadrants;
 
-typedef struct s_point {
+typedef struct qt_point {
     vec2 *point;
-    struct s_point *next;
-} s_point;
+    struct qt_point *next;
+} qt_point;
 
 typedef struct {
-    s_point *head;
+    qt_point *head;
     int length;
-} s_points;
+} qt_points;
 
-union qtnode {
+union qt_data {
     // array of points OR 4 other quadtrees
-    s_points points;
-    s_quadrants quadrants;
+    qt_points points;
+    qt_quadrants quadrants;
 };
 
 typedef struct quadtree {
     rectangle boundary;
-    node_type type;
-    union qtnode data;
+    qt_node_type type;
+    union qt_data data;
 } quadtree;
 
 quadtree* qt_make(rectangle boundary);
-void qt_insert(quadtree *t, vec2 *point);
-void qt_remove(quadtree *t, vec2 *point);
-vec2* qt_closest_to(quadtree *t, vec2 *point);
-void qt_foreach(quadtree *t, void (*quad)(quadtree*), void (*pt)(vec2*));
-void qt_free(quadtree *t);
+
+void qt_insert(quadtree *qt, vec2 *point);
+void qt_remove(quadtree *qt, vec2 *point);
+
+vec2* qt_closest_to(quadtree *qt, vec2 *point);
+
+void qt_foreach(quadtree *qt, void (*quad)(quadtree*), void (*pt)(vec2*));
+void qt_free(quadtree *qt);
