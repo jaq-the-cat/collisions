@@ -12,3 +12,7 @@ typedef struct ll_points {
 } ll_points;
 
 #define LLPOINTS (ll_points) {NULL, 0}
+
+void ll_insert(ll_points *ll, vec2 *point);
+void ll_remove(ll_points *ll, vec2 *point);
+void ll_free(ll_points *ll, vec2 *point);
