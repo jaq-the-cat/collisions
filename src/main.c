@@ -4,7 +4,7 @@
 
 #define WIDTH 800
 #define HEIGHT 800
-#define BG 200
+#define BG (Uint8) 200
 
 SDL_Window *win;
 SDL_Renderer *rend;
@@ -38,7 +38,7 @@ void init() {
     blue = IMG_LoadTexture(rend, "assets/blue.png");
     outline = IMG_LoadTexture(rend, "assets/outline.png");
 
-    qt = qt_make((rectangle) {0, 0, WIDTH, HEIGHT});
+    qt = qt_make((rectangle) {{0, 0}, {WIDTH, HEIGHT}});
 
     // create and insert 16 random points
     for (int i=0; i<PC; i++) {

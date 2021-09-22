@@ -1,0 +1,9 @@
+-Iheaders
+-Wall
+-O2
+-std=c17
+-I/usr/include/SDL2
+-D_REENTRANT
+-lSDL2_image
+-pthread
+-lSDL2
